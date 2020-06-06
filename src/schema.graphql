@@ -1,0 +1,20 @@
+import { GraphQLServer } from 'graphql-yoga'
+
+const typeDefs  = `type Query {
+    name:String
+    location:String
+}`
+
+const resolvers = {
+    Query:{
+        name(){
+            return "Shiva"
+        },
+        location(){
+            return "visakhapatnam"
+        }
+    }
+}
+
+const server = new GraphQLServer({typeDefs,resolvers})
+server.start(()=>{console.log("the server is up and running")})
