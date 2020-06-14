@@ -1,41 +1,32 @@
+import getUserId from '../utils/getUserId'
+
 const Query = {
-    users(parent, args, { db }, info) {
-        if (!args.query) {
-            return db.users
+    users(parent, args, { prisma }, info) {
+        const opArgs = {
+            first: args.first,
+            skip: args.skip,
+            after: args.after,
+            orderBy: args.orderBy
+        }
+        
+        if (args.query) {
+            opArgs.where = {
+                OR: [{
+                    name_contains: args.query
+                }]
+            }
         }
 
-        return db.users.filter((user) => {
-            return user.name.toLowerCase().includes(args.query.toLowerCase())
+        return prisma.query.users(opArgs, info)
+    },
+    me(parent, args, { prisma, request }, info) {
+        const userId = getUserId(request)
+        
+        return prisma.query.user({
+            where: {
+                id: userId
+            }
         })
-    },
-    posts(parent, args, { db }, info) {
-        if (!args.query) {
-            return db.posts
-        }
-
-        return db.posts.filter((post) => {
-            const isTitleMatch = post.title.toLowerCase().includes(args.query.toLowerCase())
-            const isBodyMatch = post.body.toLowerCase().includes(args.query.toLowerCase())
-            return isTitleMatch || isBodyMatch
-        })
-    },
-    comments(parent, args, { db }, info) {
-        return db.comments
-    },
-    me() {
-        return {
-            id: '123098',
-            name: 'Mike',
-            email: 'mike@example.com'
-        }
-    },
-    post() {
-        return {
-            id: '092',
-            title: 'GraphQL 101',
-            body: '',
-            published: false
-        }
     }
 }
 
