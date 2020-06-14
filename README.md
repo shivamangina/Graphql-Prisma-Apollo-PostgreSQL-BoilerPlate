@@ -7,12 +7,14 @@ A Simple Boilerplate with prisma and graphql-yoga.
 Use the package manager npm to install.
 
 ```bash
+
 npm install
 ```
 
 ## To run Prisma server
 
 ```bash
+npm i -g prisma  - to install globally
 cd prisma
 docker-compose up -d
 prisma deploy
